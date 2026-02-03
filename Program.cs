@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Add services
 builder.Services.AddControllers();
 
 // Register Oracle DbContext
@@ -14,11 +14,9 @@ builder.Services.AddDbContext<LMSDbContext>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// Middleware
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();

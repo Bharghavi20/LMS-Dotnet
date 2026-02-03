@@ -11,11 +11,12 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
 		<PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\" />
+	  <Folder Include="Helper\" />
 	</ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 ﻿using LMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using LMS.Helpers;
+
 
 namespace LMS.Controllers;
 
@@ -21,11 +23,15 @@ public class CoursesController : ControllerBase
         var courses = await _context.Courses.ToListAsync();
         return Ok(courses);
     }
-    // POST: api/courses
     [HttpPost]
-    public async Task<IActionResult> CreateCourse(Course course)
+    public async Task<IActionResult> CreateCourse(int userId, Course course)
     {
-        // Check if creator exists (Oracle-safe)
+        // 🔐 ADMIN CHECK
+        if (!await RoleChecker.IsAdmin(_context, userId))
+            return StatusCode(403, "Only Admin can create courses");
+
+
+        // Check if creator exists
         var users = await _context.Users
             .Where(u => u.UserId == course.CreatedBy)
             .ToListAsync();
@@ -39,6 +45,66 @@ public class CoursesController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(course);
+    }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCourse(int id, int userId, Course updatedCourse)
+    {
+        // 🔐 ADMIN CHECK
+        if (!await RoleChecker.IsAdmin(_context, userId))
+            return StatusCode(403, "Only Admin can update courses");
+
+
+
+        var courses = await _context.Courses
+            .Where(c => c.CourseId == id)
+            .ToListAsync();
+
+        var course = courses.FirstOrDefault();
+        if (course == null)
+            return NotFound();
+
+        course.Title = updatedCourse.Title;
+        course.Description = updatedCourse.Description;
+
+        await _context.SaveChangesAsync();
+        return Ok(course);
+    }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCourse(int id, int userId)
+    {
+        // 🔐 ADMIN CHECK
+        if (!await RoleChecker.IsAdmin(_context, userId))
+            return StatusCode(403, "Only Admin can delete courses");
+
+
+        var lessons = await _context.Lessons
+            .Where(l => l.CourseId == id)
+            .ToListAsync();
+
+        if (lessons.Any())
+        {
+            var lessonIds = lessons.Select(l => l.LessonId).ToList();
+
+            var progress = await _context.Progresses
+                .Where(p => lessonIds.Contains(p.LessonId))
+                .ToListAsync();
+
+            _context.Progresses.RemoveRange(progress);
+            _context.Lessons.RemoveRange(lessons);
+            await _context.SaveChangesAsync();
+        }
+
+        var course = await _context.Courses
+            .Where(c => c.CourseId == id)
+            .FirstOrDefaultAsync();
+
+        if (course == null)
+            return NotFound();
+
+        _context.Courses.Remove(course);
+        await _context.SaveChangesAsync();
+
+        return Ok("Course and related data deleted successfully");
     }
 
 
