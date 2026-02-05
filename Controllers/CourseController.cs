@@ -1,8 +1,7 @@
-﻿using LMS.Models;
+﻿using LMS.Helpers;
+using LMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LMS.Helpers;
-
 
 namespace LMS.Controllers;
 
@@ -16,6 +15,7 @@ public class CoursesController : ControllerBase
     {
         _context = context;
     }
+
     // GET: api/courses
     [HttpGet]
     public async Task<IActionResult> GetCourses()
@@ -23,15 +23,14 @@ public class CoursesController : ControllerBase
         var courses = await _context.Courses.ToListAsync();
         return Ok(courses);
     }
+
+    // POST: api/courses?userId=21
     [HttpPost]
-    public async Task<IActionResult> CreateCourse(int userId, Course course)
+    public async Task<IActionResult> CreateCourse([FromQuery] int userId, [FromBody] Course course)
     {
-        // 🔐 ADMIN CHECK
         if (!await RoleChecker.IsAdmin(_context, userId))
             return StatusCode(403, "Only Admin can create courses");
 
-
-        // Check if creator exists
         var users = await _context.Users
             .Where(u => u.UserId == course.CreatedBy)
             .ToListAsync();
@@ -46,20 +45,20 @@ public class CoursesController : ControllerBase
 
         return Ok(course);
     }
+
+    // PUT: api/courses/23?userId=21
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCourse(int id, int userId, Course updatedCourse)
+    public async Task<IActionResult> UpdateCourse(int id, [FromQuery] int userId, [FromBody] Course updatedCourse)
     {
-        // 🔐 ADMIN CHECK
         if (!await RoleChecker.IsAdmin(_context, userId))
             return StatusCode(403, "Only Admin can update courses");
-
-
 
         var courses = await _context.Courses
             .Where(c => c.CourseId == id)
             .ToListAsync();
 
         var course = courses.FirstOrDefault();
+
         if (course == null)
             return NotFound();
 
@@ -67,15 +66,16 @@ public class CoursesController : ControllerBase
         course.Description = updatedCourse.Description;
 
         await _context.SaveChangesAsync();
+
         return Ok(course);
     }
+
+    // DELETE: api/courses/23?userId=21
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCourse(int id, int userId)
+    public async Task<IActionResult> DeleteCourse(int id, [FromQuery] int userId)
     {
-        // 🔐 ADMIN CHECK
         if (!await RoleChecker.IsAdmin(_context, userId))
             return StatusCode(403, "Only Admin can delete courses");
-
 
         var lessons = await _context.Lessons
             .Where(l => l.CourseId == id)
@@ -89,14 +89,19 @@ public class CoursesController : ControllerBase
                 .Where(p => lessonIds.Contains(p.LessonId))
                 .ToListAsync();
 
-            _context.Progresses.RemoveRange(progress);
+            if (progress.Any())
+                _context.Progresses.RemoveRange(progress);
+
             _context.Lessons.RemoveRange(lessons);
+
             await _context.SaveChangesAsync();
         }
 
-        var course = await _context.Courses
+        var courses = await _context.Courses
             .Where(c => c.CourseId == id)
-            .FirstOrDefaultAsync();
+            .ToListAsync();
+
+        var course = courses.FirstOrDefault();
 
         if (course == null)
             return NotFound();
@@ -106,6 +111,4 @@ public class CoursesController : ControllerBase
 
         return Ok("Course and related data deleted successfully");
     }
-
-
 }

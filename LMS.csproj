@@ -15,8 +15,4 @@
 		<PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.1" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Helper\" />
-	</ItemGroup>
-
 </Project>

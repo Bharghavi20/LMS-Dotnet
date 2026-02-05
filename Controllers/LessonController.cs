@@ -15,6 +15,7 @@ public class LessonsController : ControllerBase
     {
         _context = context;
     }
+
     // GET: api/lessons/course/22
     [HttpGet("course/{courseId}")]
     public async Task<IActionResult> GetLessonsByCourse(int courseId)
@@ -25,20 +26,32 @@ public class LessonsController : ControllerBase
 
         return Ok(lessons);
     }
-    // POST: api/lessons
+
+    // POST: api/lessons?userId=21
     [HttpPost]
-    public async Task<IActionResult> CreateLesson(int userId, Lesson lesson)
+    public async Task<IActionResult> CreateLesson([FromQuery] int userId, [FromBody] Lesson lesson)
     {
         if (!await RoleChecker.IsAdmin(_context, userId))
             return StatusCode(403, "Only Admin can create lessons");
+
+        var courses = await _context.Courses
+            .Where(c => c.CourseId == lesson.CourseId)
+            .ToListAsync();
+
+        if (!courses.Any())
+            return BadRequest("Course does not exist");
+
+        lesson.CreatedAt = DateTime.Now;
 
         _context.Lessons.Add(lesson);
         await _context.SaveChangesAsync();
 
         return Ok(lesson);
     }
+
+    // PUT: api/lessons/5?userId=21
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateLesson(int id, int userId, Lesson updatedLesson)
+    public async Task<IActionResult> UpdateLesson(int id, [FromQuery] int userId, [FromBody] Lesson updatedLesson)
     {
         if (!await RoleChecker.IsAdmin(_context, userId))
             return StatusCode(403, "Only Admin can update lessons");
@@ -48,6 +61,7 @@ public class LessonsController : ControllerBase
             .ToListAsync();
 
         var lesson = lessons.FirstOrDefault();
+
         if (lesson == null)
             return NotFound();
 
@@ -55,11 +69,13 @@ public class LessonsController : ControllerBase
         lesson.Content = updatedLesson.Content;
 
         await _context.SaveChangesAsync();
+
         return Ok(lesson);
     }
-    // DELETE: api/lessons/5
+
+    // DELETE: api/lessons/5?userId=21
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteLesson(int id, int userId)
+    public async Task<IActionResult> DeleteLesson(int id, [FromQuery] int userId)
     {
         if (!await RoleChecker.IsAdmin(_context, userId))
             return StatusCode(403, "Only Admin can delete lessons");
@@ -69,6 +85,7 @@ public class LessonsController : ControllerBase
             .ToListAsync();
 
         var lesson = lessons.FirstOrDefault();
+
         if (lesson == null)
             return NotFound();
 
@@ -76,13 +93,13 @@ public class LessonsController : ControllerBase
             .Where(p => p.LessonId == id)
             .ToListAsync();
 
-        _context.Progresses.RemoveRange(progress);
+        if (progress.Any())
+            _context.Progresses.RemoveRange(progress);
+
         _context.Lessons.Remove(lesson);
 
         await _context.SaveChangesAsync();
+
         return Ok("Lesson deleted successfully");
     }
-
-
-
 }
