@@ -1,0 +1,70 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-4">
+
+  <div class="w-full max-w-md bg-white/90 backdrop-blur-lg shadow-2xl rounded-2xl p-8">
+
+    <!-- Title -->
+    <h1 class="text-3xl font-extrabold text-center text-purple-700 mb-2">
+      📚 Learning Management System
+    </h1>
+    <p class="text-center text-gray-600 mb-6">
+      Create your account to start learning 🚀
+    </p>
+
+    <!-- Register Heading -->
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+      Register
+    </h2>
+
+    <!-- Full Name -->
+    <label class="block mb-1 font-semibold text-gray-700">Full Name</label>
+    <input [(ngModel)]="fullName" type="text"
+      class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+      placeholder="Enter your full name" />
+
+    <!-- Username -->
+    <label class="block mb-1 font-semibold text-gray-700">Username</label>
+    <input [(ngModel)]="username" type="text"
+      class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+      placeholder="Enter username" />
+
+    <!-- Email -->
+    <label class="block mb-1 font-semibold text-gray-700">Email</label>
+    <input [(ngModel)]="email" type="email"
+      class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+      placeholder="Enter your email" />
+
+    <!-- Password -->
+    <label class="block mb-1 font-semibold text-gray-700">Password</label>
+    <input [(ngModel)]="password" type="password"
+      class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+      placeholder="Enter password" />
+
+    <!-- Role -->
+    <label class="block mb-1 font-semibold text-gray-700">Role</label>
+    <select [(ngModel)]="role"
+      class="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500">
+      <option value="Student">Student</option>
+      <option value="Admin">Admin</option>
+    </select>
+
+    <!-- Button -->
+    <button (click)="register()"
+      class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:scale-105 transition duration-300 shadow-lg">
+      Register
+    </button>
+
+    <!-- Message -->
+    <p class="text-center mt-5 text-green-600 font-semibold">
+      {{message}}
+    </p>
+
+    <!-- Footer -->
+    <p class="text-center text-gray-600 mt-6">
+      Already have an account?
+      <a routerLink="/login" class="text-purple-700 font-bold hover:underline">
+        Login
+      </a>
+    </p>
+
+  </div>
+</div>

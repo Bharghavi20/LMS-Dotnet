@@ -1,0 +1,75 @@
+<div class="min-h-screen bg-gray-100 flex">
+
+  <!-- SIDEBAR -->
+  <div class="w-64 bg-blue-800 text-white p-6">
+    <h2 class="text-2xl font-bold mb-8 text-center">Admin Panel</h2>
+
+    <ul class="space-y-4 text-lg font-semibold">
+      <li class="hover:text-yellow-300 cursor-pointer">📊 Dashboard</li>
+      <li class="hover:text-yellow-300 cursor-pointer">📚 Courses</li>
+      <li class="hover:text-yellow-300 cursor-pointer">📖 Lessons</li>
+      <li class="hover:text-yellow-300 cursor-pointer">🧑‍🎓 Students</li>
+      <li class="hover:text-yellow-300 cursor-pointer">📝 Enrollments</li>
+      <li class="hover:text-red-300 cursor-pointer mt-8">🚪 Logout</li>
+    </ul>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="flex-1 p-8">
+
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">
+      📊 Admin Dashboard
+    </h1>
+
+    <!-- STATS CARDS -->
+    <div class="grid md:grid-cols-4 gap-6 mb-10">
+
+      <div (click)="goToCourses()" class="bg-white shadow-lg rounded-xl p-6 border hover:cursor-pointer">
+        <h3 class="text-xl font-bold text-gray-600">Total Courses</h3>
+        <p class="text-3xl font-bold text-blue-700 mt-3">{{ totalCourses }}</p>
+      </div>
+
+      <div (click)="goToLessons()" class="bg-white shadow-lg rounded-xl p-6 border hover:cursor-pointer">
+        <h3 class="text-xl font-bold text-gray-600">Total Lessons</h3>
+        <p class="text-3xl font-bold text-purple-700 mt-3">{{ totalLessons }}</p>
+      </div>
+
+      <div (click)="goToStudents()" class="bg-white shadow-lg rounded-xl p-6 border hover:cursor-pointer">
+        <h3 class="text-xl font-bold text-gray-600">Total Students</h3>
+        <p class="text-3xl font-bold text-green-700 mt-3">{{ totalStudents }}</p>
+      </div>
+
+      <div (click)="goToEnrollments()" class="bg-white shadow-lg rounded-xl p-6 border hover:cursor-pointer">
+        <h3 class="text-xl font-bold text-gray-600">Total Enrollments</h3>
+        <p class="text-3xl font-bold text-red-600 mt-3">{{ totalEnrollments }}</p>
+      </div>
+
+    </div>
+
+    <!-- RECENT ENROLLMENTS -->
+    <div class="bg-white shadow-xl rounded-xl p-6 border">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        📌 Recent Enrollments
+      </h2>
+
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-200 text-gray-700 text-left">
+            <th class="p-3">Student</th>
+            <th class="p-3">Course</th>
+            <th class="p-3">Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let enroll of recentEnrollments" class="border-b hover:bg-gray-50">
+            <td class="p-3 font-semibold">{{ enroll.student }}</td>
+            <td class="p-3">{{ enroll.course }}</td>
+            <td class="p-3">{{ enroll.date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

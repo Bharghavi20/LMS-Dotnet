@@ -1,0 +1,119 @@
+<div class="min-h-screen bg-gray-100">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
+    
+    <h1 class="text-2xl font-bold text-blue-600">LMS Dashboard</h1>
+
+    <div class="flex gap-4">
+
+      <button
+        (click)="goNotifications()"
+        class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">
+        🔔 Notifications
+      </button>
+
+      <button
+        (click)="goProfile()"
+        class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
+        👤 Edit Profile
+      </button>
+
+      <button 
+        (click)="logout()"
+        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+        Logout
+      </button>
+
+    </div> <!-- ✅ THIS WAS MISSING -->
+    
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-6xl mx-auto mt-10 px-6">
+
+    <!-- Welcome -->
+    <div class="bg-blue-600 text-white p-6 rounded-xl shadow-lg flex justify-between items-center">
+      <div>
+        <h2 class="text-3xl font-bold">Welcome, {{username}} 👋</h2>
+        <p class="text-lg mt-2 opacity-90">
+          Ready to learn something new today?
+        </p>
+      </div>
+
+      <div class="text-5xl">
+        🎓
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+
+      <!-- Enrollment Card -->
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition">
+        <h3 class="text-xl font-bold text-gray-800">📝 Enrollment</h3>
+        <p class="text-gray-600 mt-2">
+          View your enrolled courses and manage enrollments.
+        </p>
+
+        <button (click)="goEnrollments()"
+          class="mt-5 w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition">
+          My Enrollments
+        </button>
+      </div>
+
+      <!-- Courses Card -->
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition">
+        <h3 class="text-xl font-bold text-gray-800">📚 Courses</h3>
+        <p class="text-gray-600 mt-2">
+          Explore available courses and start learning.
+        </p>
+
+        <button 
+          (click)="goCourses()"
+          class="mt-5 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+          View Courses
+        </button>
+      </div>
+
+      <!-- Lessons Card -->
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition">
+        <h3 class="text-xl font-bold text-gray-800">📖 Lessons</h3>
+        <p class="text-gray-600 mt-2">
+          Continue your lessons and improve your skills.
+        </p>
+
+        <button 
+          (click)="goLessons()"
+          class="mt-5 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+          View Lessons
+        </button>
+      </div>
+
+      <!-- Progress Card -->
+      <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition">
+        <h3 class="text-xl font-bold text-gray-800">📈 Progress</h3>
+        <p class="text-gray-600 mt-2">
+          Track your completed lessons and course progress.
+        </p>
+
+        <button 
+          (click)="goProgress()"
+          class="mt-5 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+          My Progress
+        </button>
+      </div>
+    </div>
+
+    <!-- Extra Section -->
+    <div class="mt-12 bg-white p-6 rounded-xl shadow-lg">
+      <h3 class="text-2xl font-bold text-gray-800">🚀 Quick Tips</h3>
+      <ul class="list-disc ml-6 mt-3 text-gray-600 space-y-2">
+        <li>Start with beginner courses if you're new.</li>
+        <li>Complete lessons daily to improve faster.</li>
+        <li>Check progress weekly to stay consistent.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>

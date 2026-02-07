@@ -1,0 +1,138 @@
+<div class="min-h-screen bg-gray-100 p-8">
+
+  <h2 class="text-3xl font-bold text-center text-blue-700 mb-8">
+    📖 Lessons
+  </h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <!-- LEFT SIDE: Lesson List -->
+    <div>
+      <h3 class="text-xl font-bold text-gray-800 mb-4">All Lessons</h3>
+
+      <div *ngFor="let lesson of lessons"
+        (click)="openLesson(lesson)"
+        class="bg-white shadow-lg rounded-xl p-6 mb-5 cursor-pointer hover:shadow-2xl transition border">
+
+        <h3 class="text-2xl font-bold text-gray-800">
+          {{ lesson.title }}
+        </h3>
+
+        <p class="text-gray-600 mt-2">
+          {{ lesson.content }}
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Lesson Details -->
+    <div class="bg-white shadow-xl rounded-xl p-6 border">
+
+      <div *ngIf="selectedLesson == null" class="text-center text-gray-500 text-lg">
+        Click a lesson to view details 📌
+      </div>
+
+      <div *ngIf="selectedLesson">
+
+        <!-- LESSON CONTENT -->
+        <h2 class="text-3xl font-bold text-purple-700 mb-3">
+          {{ selectedLesson.title }}
+        </h2>
+
+        <p class="text-gray-700 mb-6">
+          {{ selectedLesson.content }}
+        </p>
+
+        <!-- COMPLETE BUTTON -->
+        <button
+          *ngIf="!selectedLesson.completed"
+          (click)="markLessonComplete()"
+          class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition font-bold">
+          ✅ Complete Lesson
+        </button>
+
+        <!-- AFTER COMPLETION -->
+        <div *ngIf="selectedLesson.completed" class="mt-6">
+
+          <p class="text-green-700 font-bold text-lg mb-4">
+            🎉 Lesson Completed! Now complete tasks & quiz below.
+          </p>
+
+          <!-- TASKS -->
+          <h3 class="text-xl font-bold text-blue-700 mb-2">✅ Tasks</h3>
+          <ul class="list-disc ml-6 text-gray-700 mb-6">
+            <li *ngFor="let task of selectedLesson.tasks">
+              {{ task }}
+            </li>
+          </ul>
+
+          <!-- QUIZ -->
+          <h3 class="text-xl font-bold text-green-700 mb-3">📝 Quiz</h3>
+
+          <div *ngFor="let q of selectedLesson.quiz; let i = index"
+            class="bg-gray-50 p-4 rounded-lg shadow-sm mb-4 border">
+
+            <p class="font-bold text-gray-800">
+              Q{{ i+1 }}. {{ q.question }}
+            </p>
+
+            <div class="mt-3 space-y-2">
+
+              <button *ngFor="let opt of q.options"
+                (click)="selectAnswer(q, opt)"
+                [ngClass]="{
+                  'bg-blue-200 border-blue-600 font-bold': q.selectedAnswer === opt,
+                  'bg-white': q.selectedAnswer !== opt
+                }"
+                class="w-full text-left border px-4 py-2 rounded-lg hover:bg-blue-100 transition">
+                {{ opt }}
+              </button>
+
+            </div>
+
+            <!-- Show Correct Answer After Submit -->
+            <div *ngIf="quizSubmitted" class="mt-3">
+              <p class="font-semibold"
+                [ngClass]="{
+                  'text-green-700': q.selectedAnswer === q.answer,
+                  'text-red-600': q.selectedAnswer !== q.answer
+                }">
+                Your Answer: {{ q.selectedAnswer || 'Not Answered' }}
+              </p>
+
+              <p class="text-gray-700">
+                Correct Answer: <span class="font-bold">{{ q.answer }}</span>
+              </p>
+            </div>
+
+          </div>
+
+          <!-- SUBMIT BUTTON -->
+          <button
+            *ngIf="!quizSubmitted"
+            (click)="submitQuiz()"
+            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-bold">
+            📌 Submit Quiz
+          </button>
+
+          <!-- RESULT -->
+          <div *ngIf="quizSubmitted" class="mt-6 bg-green-50 border border-green-400 p-5 rounded-lg shadow">
+            <h3 class="text-2xl font-bold text-green-700 mb-2">
+              🎯 Quiz Result
+            </h3>
+
+            <p class="text-lg text-gray-800 font-semibold">
+              Score: {{ score }} / {{ totalQuestions }}
+            </p>
+
+            <p class="text-xl font-bold mt-2 text-purple-700">
+              Status: {{ getResultStatus() }}
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
